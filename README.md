@@ -1,6 +1,8 @@
 # Weivas Marketplace
 
-Live site: [https://idwrdev.github.io/weivas-marketplace/](https://idwrdev.github.io/weivas-marketplace/)
+Production site: [https://weivas.com/](https://weivas.com/)
+
+GitHub Pages fallback: [https://idwrdev.github.io/weivas-marketplace/](https://idwrdev.github.io/weivas-marketplace/)
 
 Weivas is a premium global multi-vendor marketplace connecting buyers with independent sellers, brands, manufacturers, distributors, and verified suppliers. Its consumer promise is **“Good things, handpicked for you.”** and its wider brand promise is **“Verify. Connect. Empower.”**
 
