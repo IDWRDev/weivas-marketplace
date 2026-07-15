@@ -1,2 +1,4 @@
-import { products } from "@/data/mock/marketplace"; import { ProductCard } from "@/components/marketplace/ProductCard";
-export default async function Search({searchParams}:{searchParams:Promise<{q?:string}>}){const {q=""}=await searchParams;const filtered=products.filter(p=>p.name.toLowerCase().includes(q.toLowerCase()));return <main className="section search-page"><span>SEARCH RESULTS</span><h1>{q?`Results for “${q}”`:"Explore all products"}</h1>{filtered.length?<div className="product-grid">{filtered.map(p=><ProductCard key={p.id} product={p}/>)}</div>:<div className="empty"><b>No products found</b><p>Try a broader search or browse our categories.</p></div>}</main>}
+import { Suspense } from "react";
+import { SearchResults } from "@/components/marketplace/SearchResults";
+
+export default function SearchPage(){return <Suspense fallback={<main className="section search-page"><span>SEARCH RESULTS</span><h1>Finding handpicked products…</h1></main>}><SearchResults/></Suspense>}
