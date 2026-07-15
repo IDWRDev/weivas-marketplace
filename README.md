@@ -18,13 +18,13 @@ npm run build
 
 ## Implemented experiences
 
-- `/` responsive public marketplace homepage
+- `/` complete responsive marketplace homepage with a four-slide hero, category navigation, product departments, daily deals, wholesale sourcing, featured sellers, Weivas Pay and buyer-protection education, app promotion, and global footer
 - `/search` searchable product results and no-results state
 - `/account` buyer dashboard overview
 - `/seller` seller performance dashboard
 - `/seller/products` responsive product management table/cards
 
-Shared UI lives in `src/components`, typed fictional content in `src/data/mock`, and brand assets in `public/brand`. Commerce, authentication, payments, verification, logistics, refunds, payouts, and analytics are demonstrations only; no external service is connected.
+Shared UI lives in `src/components`, typed fictional content in `src/data/mock`, and brand assets in `public/brand`. Homepage interactions use persisted local browser state for wishlist and cart counts. The category drawer, hero controls, search form, countdown, horizontal product rails, and mobile navigation are working frontend demonstrations. Commerce, authentication, payments, verification, logistics, refunds, payouts, and analytics are demonstrations only; no external service is connected.
 
 ## Visual direction
 
@@ -32,4 +32,4 @@ The design uses approved orange, charcoal, cream, peach, white, and light-grey t
 
 ## Next stage
 
-Build full product detail, category, cart, checkout, order tracking, seller onboarding, and remaining account/seller route foundations; then connect approved backend services behind explicit mock/service boundaries.
+Build complete product detail, category/search discovery, cart, and checkout experiences, followed by order tracking and seller onboarding; then connect approved backend services behind explicit mock/service boundaries.
