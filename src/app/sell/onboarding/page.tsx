@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="SELLER ONBOARDING" title="Prepare your Weivas store" description="Complete your profile, catalogue, delivery, and payout preferences."/>}

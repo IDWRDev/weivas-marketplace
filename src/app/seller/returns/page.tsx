@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="SELLER CENTRE" title="Returns" description="Respond to return and refund requests."/>}

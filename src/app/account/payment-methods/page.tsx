@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="MY ACCOUNT" title="Payment methods" description="Payment details are not collected in this frontend demonstration."/>}

@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default async function Page({params}:{params:Promise<{sellerSlug:string}>}){const {sellerSlug}=await params;return <FoundationPage eyebrow="VERIFIED STORE" title={sellerSlug.replaceAll("-"," ")} description="Shop a trusted seller storefront on Weivas."/>}

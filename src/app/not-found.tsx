@@ -1,0 +1,1 @@
+import Link from "next/link"; export default function NotFound(){return <main className="state-page"><span>404</span><h1>We couldn’t find that page</h1><p>The product or page may have moved.</p><Link className="button" href="/">Return home</Link></main>}

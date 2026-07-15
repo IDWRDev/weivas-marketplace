@@ -1,0 +1,2 @@
+import Link from "next/link";
+export function FoundationPage({eyebrow,title,description}:{eyebrow:string;title:string;description:string}){return <main className="state-page"><small className="eyebrow">{eyebrow}</small><h1>{title}</h1><p>{description}</p><p>This branded route foundation is ready for the next implementation stage.</p><Link className="button" href="/">Return to marketplace</Link></main>}

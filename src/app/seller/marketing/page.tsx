@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="SELLER CENTRE" title="Marketing" description="Plan campaigns, offers, and promoted products."/>}

@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="SELLER CENTRE" title="Analytics" description="Understand store reach, conversion, sales, and catalogue performance."/>}

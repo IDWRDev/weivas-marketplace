@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="MY ACCOUNT" title="Settings" description="Manage your profile, preferences, notifications, and security."/>}

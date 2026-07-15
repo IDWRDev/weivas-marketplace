@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="SELLER CENTRE" title="Payouts" description="Payout values are demonstrations until a provider is connected."/>}

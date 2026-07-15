@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="MY ACCOUNT" title="Returns" description="Submit and monitor protected return requests."/>}

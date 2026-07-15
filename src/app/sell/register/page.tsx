@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="SELLER REGISTRATION" title="Create your seller profile" description="Business verification is represented as a future integration."/>}
