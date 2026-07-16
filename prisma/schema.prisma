@@ -99,6 +99,7 @@ model User {
   phone String?
   primaryRole UserRole @default(buyer)
   status UserStatus @default(pending)
+  sessionVersion Int @default(0)
   roles UserRoleGrant[]
   buyerProfile BuyerProfile?
   sellerProfile SellerProfile?
@@ -464,4 +465,14 @@ model PasswordResetToken {
   usedAt DateTime?
   createdAt DateTime @default(now())
   @@index([userId])
+}
+
+model AuthRateLimit {
+  id String @id @default(cuid())
+  keyHash String @unique
+  attempts Int @default(0)
+  windowStartedAt DateTime @default(now())
+  blockedUntil DateTime?
+  updatedAt DateTime @updatedAt
+  @@index([updatedAt])
 }

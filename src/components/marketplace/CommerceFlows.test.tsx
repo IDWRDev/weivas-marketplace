@@ -8,6 +8,8 @@ import { useMarketplaceStore } from "@/stores/marketplace-store";
 const push=vi.fn();
 vi.mock("next/navigation",()=>({useRouter:()=>({push}),usePathname:()=>"/"}));
 vi.mock("next/link",()=>({default:({href,children,...props}:React.AnchorHTMLAttributes<HTMLAnchorElement>)=><a href={String(href)} {...props}>{children}</a>}));
+vi.mock("@/app/(marketplace)/checkout/actions",()=>({placeOrder:vi.fn()}));
+vi.mock("@/app/marketplace-actions",()=>({syncCartItem:vi.fn(),togglePersistentWishlist:vi.fn()}));
 
 describe("commerce flows",()=>{
   beforeEach(()=>{localStorage.clear();push.mockClear();act(()=>useMarketplaceStore.setState({cart:{},wishlist:[],checkout:null}))});

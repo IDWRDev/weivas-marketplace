@@ -1,36 +1,9 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { CartItem, CheckoutState } from "@/types/marketplace";
+import type { CartItem,CheckoutState,Product } from "@/types/marketplace";
 import { getCartItemCount } from "@/lib/marketplace";
-
-type State = {
-  cart: Record<string, number>;
-  wishlist: string[];
-  checkout: CheckoutState | null;
-  addToCart: (id: string, quantity?:number) => void;
-  setQuantity: (id: string, quantity: number) => void;
-  removeFromCart: (id: string) => void;
-  toggleWishlist: (id: string) => void;
-  beginCartCheckout: () => void;
-  beginBuyNow: (item:CartItem) => void;
-  cartCount: () => number;
-};
-
-const cartItems = (cart:Record<string,number>):CartItem[] => Object.entries(cart).map(([productId, quantity]) => ({ productId, quantity })).filter((item) => item.quantity > 0);
-
-export const useMarketplaceStore = create<State>()(
-  persist(
-    (set, get) => ({
-      cart: {}, wishlist: [], checkout: null,
-      addToCart: (id, quantity=1) => set((state) => ({ cart: { ...state.cart, [id]: (state.cart[id] || 0) + quantity } })),
-      setQuantity: (id, quantity) => set((state) => { const cart = { ...state.cart }; if (quantity <= 0) delete cart[id]; else cart[id] = quantity; return { cart }; }),
-      removeFromCart: (id) => set((state) => { const cart = { ...state.cart }; delete cart[id]; return { cart }; }),
-      toggleWishlist: (id) => set((state) => ({ wishlist: state.wishlist.includes(id) ? state.wishlist.filter((item) => item !== id) : [...state.wishlist, id] })),
-      beginCartCheckout: () => set((state) => ({ checkout: { mode:"cart", items:cartItems(state.cart) } })),
-      beginBuyNow: (item) => set({ checkout: { mode:"buy_now", items:[item] } }),
-      cartCount: () => getCartItemCount(cartItems(get().cart)),
-    }),
-    { name: "weivas-marketplace-state", version:2, migrate:(persisted)=>({ ...(persisted as Partial<State>), checkout:null }) as State },
-  ),
-);
+import { syncCartItem,togglePersistentWishlist } from "@/app/marketplace-actions";
+type State={cart:Record<string,number>;wishlist:string[];catalog:Record<string,Product>;checkout:CheckoutState|null;rememberProduct:(product:Product)=>void;hydrateCart:(items:CartItem[],products:Product[])=>void;addToCart:(id:string,quantity?:number)=>void;setQuantity:(id:string,quantity:number)=>void;removeFromCart:(id:string)=>void;toggleWishlist:(id:string)=>void;beginCartCheckout:()=>void;beginBuyNow:(item:CartItem)=>void;clearPurchased:(ids:string[])=>void;cartCount:()=>number};
+const cartItems=(cart:Record<string,number>):CartItem[]=>Object.entries(cart).map(([productId,quantity])=>({productId,quantity})).filter(item=>item.quantity>0);
+export const useMarketplaceStore=create<State>()(persist((set,get)=>({cart:{},wishlist:[],catalog:{},checkout:null,rememberProduct:product=>set(state=>({catalog:{...state.catalog,[product.id]:product}})),hydrateCart:(items,products)=>set(state=>({cart:Object.fromEntries(items.map(item=>[item.productId,item.quantity])),catalog:{...state.catalog,...Object.fromEntries(products.map(product=>[product.id,product]))}})),addToCart:(id,quantity=1)=>set(state=>{const next=(state.cart[id]||0)+quantity;void syncCartItem(id,next);return{cart:{...state.cart,[id]:next}}}),setQuantity:(id,quantity)=>set(state=>{const cart={...state.cart};if(quantity<=0)delete cart[id];else cart[id]=quantity;void syncCartItem(id,Math.max(0,quantity));return{cart}}),removeFromCart:id=>set(state=>{const cart={...state.cart};delete cart[id];void syncCartItem(id,0);return{cart}}),toggleWishlist:id=>set(state=>{void togglePersistentWishlist(id);return{wishlist:state.wishlist.includes(id)?state.wishlist.filter(item=>item!==id):[...state.wishlist,id]}}),beginCartCheckout:()=>set(state=>({checkout:{mode:"cart",items:cartItems(state.cart)}})),beginBuyNow:item=>set({checkout:{mode:"buy_now",items:[item]}}),clearPurchased:ids=>set(state=>({cart:Object.fromEntries(Object.entries(state.cart).filter(([id])=>!ids.includes(id))),checkout:null})),cartCount:()=>getCartItemCount(cartItems(get().cart))}),{name:"weivas-marketplace-state",version:3,migrate:persisted=>({...persisted as Partial<State>,checkout:null,catalog:{}}) as State}));

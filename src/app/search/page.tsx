@@ -1,4 +1,4 @@
-import { Suspense } from "react";
-import { SearchResults } from "@/components/marketplace/SearchResults";
-
-export default function SearchPage(){return <Suspense fallback={<main className="section search-page"><span>SEARCH RESULTS</span><h1>Finding handpicked products…</h1></main>}><SearchResults/></Suspense>}
+import { ProductCard } from "@/components/marketplace/ProductCard";
+import { getActiveCatalogProducts,toMarketplaceProduct } from "@/server/services/catalog";
+export const dynamic="force-dynamic";
+export default async function SearchPage({searchParams}:{searchParams:Promise<{q?:string}>}){const {q=""}=await searchParams;const products=(await getActiveCatalogProducts(q)).map(toMarketplaceProduct);return <main className="section search-page"><span>SEARCH RESULTS</span><h1>{q?`Results for “${q}”`:"Explore approved products"}</h1><div className="search-toolbar"><b>{products.length} live products</b></div>{products.length?<div className="product-grid">{products.map(product=><ProductCard key={product.id} product={product}/>)}</div>:<div className="empty"><b>No approved products found</b><p>Try a broader search or check back after sellers publish more products.</p></div>}</main>}
