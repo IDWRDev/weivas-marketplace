@@ -30,6 +30,7 @@ export function MarketplaceHeader({principal}:{principal?:HeaderPrincipal}) {
   useEffect(()=>{if(principal)return;fetch("/api/auth/session").then(response=>response.ok?response.json():null).then(session=>{if(session?.user)setViewer(session.user)}).catch(()=>undefined)},[principal]);
   return (
     <>
+      <div className="market-header-stack">
       <header className="market-header">
         <button
           className="mobile-menu"
@@ -109,6 +110,8 @@ export function MarketplaceHeader({principal}:{principal?:HeaderPrincipal}) {
           Sell on Weivas
         </Link>
       </nav>
+      </div>
+      <div className="market-header-placeholder" aria-hidden="true" />
       {drawer && (
         <div className="drawer-backdrop" onClick={() => setDrawer(false)}>
           <aside

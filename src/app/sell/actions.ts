@@ -8,7 +8,7 @@ import { sellerApplicationSchema, storeSchema } from "@/server/validators/seller
 
 async function userSession() {
   const session = await getSession();
-  if (!session) redirect("/auth/sign-in?callbackUrl=/sell/onboarding");
+  if (!session) redirect("/auth/seller-sign-in?callbackUrl=/sell/onboarding");
   if (session.user.status !== "active") redirect("/auth/unauthorised?reason=account-status");
   return session;
 }

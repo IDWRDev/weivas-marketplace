@@ -1,0 +1,3 @@
+.market-header-stack{position:fixed;inset:0 0 auto 0;top:0;z-index:65}
+.market-header-placeholder{display:block;height:124px;flex:none}
+@media(max-width:768px){.market-header-placeholder{height:124px}}

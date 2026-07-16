@@ -16,7 +16,7 @@ const stringFields = (value?: Record<string, unknown>) =>
 
 export default async function Page() {
   const session = await getSession();
-  if (!session) redirect("/auth/sign-in?callbackUrl=/sell/onboarding");
+  if (!session) redirect("/auth/seller-sign-in?callbackUrl=/sell/onboarding");
 
   const user = await db.user.findUniqueOrThrow({
     where: { id: session.user.id },
