@@ -7,3 +7,4 @@ export const registrationSchema = z.object({
 export const signInSchema = z.object({email:z.string().trim().toLowerCase().email(),password:z.string().min(1)});
 export const forgotPasswordSchema = z.object({email:z.string().trim().toLowerCase().email()});
 export const resetPasswordSchema = z.object({token:z.string().min(32),password:strongPassword,passwordConfirmation:z.string()}).refine((data)=>data.password===data.passwordConfirmation,{path:["passwordConfirmation"],message:"Passwords do not match"});
+export const changePasswordSchema = z.object({currentPassword:z.string().min(1),password:strongPassword,passwordConfirmation:z.string()}).refine((data)=>data.password===data.passwordConfirmation,{path:["passwordConfirmation"],message:"Passwords do not match"});
