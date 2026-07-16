@@ -1,4 +1,6 @@
-import { FoundationPage } from "@/components/feedback/FoundationPage"; import { categories } from "@/data/mock/marketplace";
+import Link from "next/link";
+import { ProductCard } from "@/components/marketplace/ProductCard";
+import { categories, products } from "@/data/mock/marketplace";
 export const dynamicParams=false;
 export function generateStaticParams(){return categories.map(({name})=>({slug:name.toLowerCase().replaceAll(" ","-")}))}
-export default async function Page({params}:{params:Promise<{slug:string}>}){const {slug}=await params;return <FoundationPage eyebrow="CATEGORY" title={slug.replaceAll("-"," ")} description="Browse handpicked products from verified sellers."/>}
+export default async function Page({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const title=slug.split("-").map(x=>x.charAt(0).toUpperCase()+x.slice(1)).join(" ");const matches=products.filter(p=>p.category.toLowerCase().includes(title.split(" & ")[0].toLowerCase()));const shown=matches.length?matches:products.slice(0,6);return <main className="commerce-page category-page"><nav className="breadcrumbs"><Link href="/">Home</Link><span>›</span><span>{title}</span></nav><header className="category-hero"><span className="eyebrow">SHOP THE CATEGORY</span><h1>{title}</h1><p>Handpicked products from verified sellers, with clear delivery and protection information.</p></header><div className="search-toolbar"><b>{shown.length} products</b><select aria-label="Sort products"><option>Recommended</option><option>Top rated</option><option>Price: low to high</option></select></div><div className="product-grid">{shown.map(p=><ProductCard key={p.id} product={p}/>)}</div></main>}

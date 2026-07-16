@@ -1,1 +1,2 @@
-import { FoundationPage } from "@/components/feedback/FoundationPage"; export default function Page(){return <FoundationPage eyebrow="SECURE CHECKOUT" title="Review and place your order" description="Payments and fulfilment remain mocked until approved services are connected."/>}
+import { CheckoutExperience } from "@/components/marketplace/CommerceFlows";
+export default function Page(){return <CheckoutExperience/>}

@@ -1,1 +1,2 @@
-import Link from "next/link"; export default function Page(){return <main className="state-page"><span>🛒</span><h1>Your cart is ready for good things</h1><p>Your saved cart is currently empty in this demonstration.</p><Link className="button" href="/search">Start shopping</Link></main>}
+import { CartExperience } from "@/components/marketplace/CommerceFlows";
+export default function Page(){return <CartExperience/>}

@@ -17,10 +17,13 @@ import { useMarketplaceStore } from "@/stores/marketplace-store";
 import { useEffect, useState } from "react";
 export function MarketplaceHeader() {
   const [drawer, setDrawer] = useState(false);
-  const count = useMarketplaceStore((s) => s.cartCount());
+  const count = useMarketplaceStore((s) => Object.values(s.cart).reduce((total, quantity) => total + quantity, 0));
   useEffect(() => {
-    void useMarketplaceStore.persist.rehydrate();
-  }, []);
+    if (!drawer) return;
+    const close = (event: KeyboardEvent) => event.key === "Escape" && setDrawer(false);
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [drawer]);
   return (
     <>
       <header className="market-header">
@@ -107,6 +110,7 @@ export function MarketplaceHeader() {
             role="dialog"
             aria-modal="true"
             aria-label="All categories"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
           >
             <header>
