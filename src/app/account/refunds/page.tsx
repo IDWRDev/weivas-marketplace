@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage";export default function Page(){return <FoundationPage eyebrow="MY ACCOUNT" title="Refunds" description="Eligible refund records will appear here after an order provider is connected."/>}

@@ -1,0 +1,2 @@
+import Link from "next/link";import { AuthShell } from "@/components/auth/AuthShell";import { RegisterForm } from "@/components/auth/AuthForms";
+export default function Page(){return <AuthShell eyebrow="JOIN WEIVAS" title="Create your buyer account" copy="Keep orders, addresses, wishlists and security settings together."><h2>Register</h2><p>Use a strong password with at least 10 characters.</p><RegisterForm/><p>Already registered? <Link href="/auth/sign-in">Sign in</Link></p></AuthShell>}

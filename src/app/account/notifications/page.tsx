@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage";export default function Page(){return <FoundationPage eyebrow="PREFERENCES" title="Notifications" description="Choose which order, promotion and security notifications you receive."/>}

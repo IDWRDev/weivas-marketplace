@@ -1,0 +1,1 @@
+import { FoundationPage } from "@/components/feedback/FoundationPage";export default function Page(){return <FoundationPage eyebrow="BUYER PROTECTION" title="Disputes" description="Open and follow protected-order disputes from this area."/>}

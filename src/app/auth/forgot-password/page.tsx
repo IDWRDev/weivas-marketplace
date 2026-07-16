@@ -1,0 +1,2 @@
+import Link from "next/link";import { AuthShell } from "@/components/auth/AuthShell";import { ForgotPasswordForm } from "@/components/auth/AuthForms";
+export default function Page(){return <AuthShell eyebrow="ACCOUNT RECOVERY" title="Reset your password safely" copy="Recovery responses do not reveal whether an email is registered."><h2>Forgot password</h2><ForgotPasswordForm/><Link href="/auth/sign-in">Return to sign in</Link></AuthShell>}

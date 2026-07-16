@@ -1,0 +1,2 @@
+import { requireArea } from "@/server/auth/session";import { db } from "@/server/db/client";import { ProductForm } from "@/components/seller/ProductForm";
+export default async function Page(){await requireArea("seller");const categories=await db.category.findMany({where:{status:"active"},select:{id:true,name:true}});return <><header className="dash-head"><div><small>NEW PRODUCT</small><h1>Create a product draft</h1><p>Products require review before activation.</p></div></header><ProductForm categories={categories}/></>}

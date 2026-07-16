@@ -2,6 +2,7 @@
 /.next
 /out
 /build
+/src/generated/
 *.log
 .env*
 !.env.example

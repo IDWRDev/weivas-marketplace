@@ -1,0 +1,2 @@
+import { AuthShell } from "@/components/auth/AuthShell";import { ResetPasswordForm } from "@/components/auth/AuthForms";
+export default async function Page({searchParams}:{searchParams:Promise<{token?:string}>}){const {token=""}=await searchParams;return <AuthShell eyebrow="SECURITY" title="Choose a new password" copy="Reset links are single-use and expire after 30 minutes."><h2>Reset password</h2><ResetPasswordForm token={token}/></AuthShell>}

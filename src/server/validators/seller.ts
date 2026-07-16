@@ -1,0 +1,6 @@
+import { z } from "zod";
+import { toSlug } from "@/lib/marketplace";
+
+export const sellerApplicationSchema=z.object({legalBusinessName:z.string().trim().min(2),businessType:z.string().min(2),registrationNumber:z.string().trim().min(2),taxNumber:z.string().trim().optional(),countryCode:z.string().length(2),website:z.string().url().optional().or(z.literal("")),productCategories:z.array(z.string()).min(1)});
+export const storeSchema=z.object({name:z.string().trim().min(2),slug:z.string().trim().min(2).transform(toSlug),description:z.string().trim().min(20),countryCode:z.string().length(2),supportEmail:z.string().email(),supportPhone:z.string().optional()});
+export const productSchema=z.object({title:z.string().trim().min(3),slug:z.string().trim().min(3).transform(toSlug),categoryId:z.string().min(1),brandId:z.string().optional(),description:z.string().trim().min(20),sku:z.string().trim().min(2),priceMinor:z.number().int().nonnegative(),compareAtPriceMinor:z.number().int().positive().optional(),currency:z.string().length(3),stock:z.number().int().nonnegative(),minimumOrderQuantity:z.number().int().positive(),shippingOriginCountry:z.string().length(2),warrantyText:z.string().optional(),returnPolicyText:z.string().optional()});

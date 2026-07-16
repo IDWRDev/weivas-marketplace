@@ -1,0 +1,2 @@
+import Link from "next/link";import { AuthShell } from "@/components/auth/AuthShell";
+export default function Page(){return <AuthShell eyebrow="EMAIL VERIFICATION" title="Check your inbox" copy="Email delivery is mocked in development until an approved provider is connected."><h2>Verification pending</h2><p>Open the verification link sent to your email. Links expire and can be safely requested again.</p><Link className="button" href="/auth/sign-in">Continue to sign in</Link></AuthShell>}

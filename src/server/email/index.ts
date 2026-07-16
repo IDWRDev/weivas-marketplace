@@ -1,0 +1,3 @@
+import "server-only";
+export interface EmailService{sendVerification(to:string,previewUrl:string):Promise<void>;sendPasswordReset(to:string,previewUrl:string):Promise<void>;sendSellerStatus(to:string,status:string):Promise<void>}
+export class DevelopmentEmailService implements EmailService{async sendVerification(to:string,previewUrl:string){console.info("[email-preview] verification",{to,previewUrl})}async sendPasswordReset(to:string,previewUrl:string){console.info("[email-preview] password-reset",{to,previewUrl})}async sendSellerStatus(to:string,status:string){console.info("[email-preview] seller-status",{to,status})}}
