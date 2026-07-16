@@ -8,6 +8,7 @@ import {
   Package,
   Search,
   ShoppingCart,
+  Store,
   UserRound,
   X,
 } from "lucide-react";
@@ -15,8 +16,10 @@ import { WeivasLogo } from "@/components/brand/WeivasLogo";
 import { categories } from "@/data/mock/marketplace";
 import { useMarketplaceStore } from "@/stores/marketplace-store";
 import { useEffect, useState } from "react";
-export function MarketplaceHeader() {
+type HeaderPrincipal={name?:string|null;role:"buyer"|"seller"|"admin";sellerApplicationStatus?:"draft"|"submitted"|"under_review"|"needs_information"|"approved"|"rejected"|"suspended"};
+export function MarketplaceHeader({principal}:{principal?:HeaderPrincipal}) {
   const [drawer, setDrawer] = useState(false);
+  const [viewer,setViewer]=useState<HeaderPrincipal|undefined>(principal);
   const count = useMarketplaceStore((s) => Object.values(s.cart).reduce((total, quantity) => total + quantity, 0));
   useEffect(() => {
     if (!drawer) return;
@@ -24,6 +27,7 @@ export function MarketplaceHeader() {
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, [drawer]);
+  useEffect(()=>{if(principal)return;fetch("/api/auth/session").then(response=>response.ok?response.json():null).then(session=>{if(session?.user)setViewer(session.user)}).catch(()=>undefined)},[principal]);
   return (
     <>
       <header className="market-header">
@@ -58,10 +62,12 @@ export function MarketplaceHeader() {
           <button className="locale">
             🌐 EN / USD <ChevronDown />
           </button>
-          <Link href="/account">
+          <Link href={viewer?"/account":"/auth/sign-in"} className="account-entry">
             <UserRound />
-            <span>Account</span>
+            <span><small>{viewer?"Buyer workspace":"Welcome"}</small><b>{viewer?"My dashboard":"Sign in"}</b></span>
           </Link>
+          {viewer?.sellerApplicationStatus==="approved"&&<Link href="/seller" className="seller-entry"><Store/><span><small>Business</small><b>Seller centre</b></span></Link>}
+          {viewer&&viewer.sellerApplicationStatus&&viewer.sellerApplicationStatus!=="approved"&&<Link href="/sell/status" className="seller-entry"><Store/><span><small>Seller application</small><b>View status</b></span></Link>}
           <Link href="/account/wishlist" aria-label="Wishlist">
             <Heart />
           </Link>

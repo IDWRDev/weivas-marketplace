@@ -4,7 +4,8 @@ export function canAccessProtectedArea(user:AuthPrincipal|undefined,area:"accoun
   if(user.status!=="active") return {allowed:false,reason:"account_status"} as const;
   if(area==="account") return {allowed:true,reason:"allowed"} as const;
   if(area==="admin") return user.role==="admin"?{allowed:true,reason:"allowed"} as const:{allowed:false,reason:"unauthorised"} as const;
-  if(user.role!=="seller") return {allowed:false,reason:user.sellerApplicationStatus?"seller_status":"seller_application"} as const;
-  return user.sellerApplicationStatus==="approved"?{allowed:true,reason:"allowed"} as const:{allowed:false,reason:"seller_status"} as const;
+  if(user.sellerApplicationStatus==="approved") return {allowed:true,reason:"allowed"} as const;
+  if(!user.sellerApplicationStatus) return {allowed:false,reason:"seller_application"} as const;
+  return {allowed:false,reason:"seller_status"} as const;
 }
 export const ownsResource=(principalId:string,ownerId:string)=>principalId===ownerId;
