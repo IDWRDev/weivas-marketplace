@@ -91,7 +91,7 @@ export function MarketplaceHeader() {
         </button>
         {categories.slice(0, 8).map((c) => (
           <Link
-            href={`/category/${c.name.toLowerCase().replaceAll(" ", "-")}`}
+            href={`/category/${c.slug}`}
             key={c.name}
           >
             {c.name}
@@ -125,7 +125,7 @@ export function MarketplaceHeader() {
             {categories.map((c) => (
               <Link
                 key={c.name}
-                href={`/category/${c.name.toLowerCase().replaceAll(" ", "-")}`}
+                href={`/category/${c.slug}`}
                 onClick={() => setDrawer(false)}
               >
                 <span>{c.icon}</span>

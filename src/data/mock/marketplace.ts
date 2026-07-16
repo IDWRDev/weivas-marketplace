@@ -1,14 +1,15 @@
-import type { Order, Product, Seller } from "@/types/marketplace";
+import type { Category, Order, Product, Seller } from "@/types/marketplace";
+import { toSlug } from "@/lib/marketplace";
 
-export const categories = [
+export const categories: Category[] = [
   ["Electronics", "⌁"], ["Computers & Office", "▣"], ["Phones & Accessories", "▯"],
   ["Home Appliances", "⌂"], ["Home & Kitchen", "♨"], ["Fashion & Apparel", "◇"],
   ["Beauty & Personal Care", "✦"], ["Toys, Kids & Baby", "☆"], ["Sports & Outdoors", "◉"],
   ["Automotive", "◌"], ["Industrial & Tools", "⚙"], ["Business & Office Supplies", "▤"],
-].map(([name, icon]) => ({ name, icon }));
+].map(([name, icon], index) => ({ id:`c${index + 1}`, slug:toSlug(name), name, icon }));
 
-const base = { verified: true, sellerName: "Nova Technology Store", supplierCountry: "Singapore" };
-export const products: Product[] = [
+const base = { verified: true, supplierCountry: "Singapore" };
+const rawProducts: Omit<Product, "slug" | "categorySlug" | "sellerId">[] = [
   { ...base, id:"p1", name:"Wireless Noise-Cancelling Headphones", brand:"Nova Audio", category:"Electronics", price:129.99, oldPrice:159.99, rating:4.8, reviewCount:2400, sold:6200, emoji:"🎧", sku:"WH-1000XMS", stock:120, status:"Active", productVerified:true, delivery:"2-day delivery", warranty:"2-year warranty" },
   { ...base, id:"p2", name:"Smart Watch Series 8", brand:"Kinetic", category:"Electronics", price:59.99, oldPrice:99.99, rating:4.6, reviewCount:1128, sold:3400, emoji:"⌚", sku:"SW-S8-45", stock:85, status:"Active", productVerified:true, delivery:"Free delivery", warranty:"1-year warranty" },
   { ...base, id:"p3", name:"Stainless Steel Water Bottle", brand:"Hearth", category:"Home & Living", price:18.99, rating:4.7, reviewCount:1930, sold:5100, emoji:"🧴", sku:"WB-SS-1L", stock:0, status:"Out of Stock", delivery:"Ships in 24 hours" },
@@ -21,19 +22,51 @@ export const products: Product[] = [
   { ...base, id:"p10", name:"Ergonomic Executive Office Chair", brand:"Origo", category:"Business Supplies", price:189.99, oldPrice:239.99, rating:4.7, reviewCount:985, sold:1400, emoji:"🪑", sku:"CHR-ERG-1", stock:18, status:"Active", delivery:"5-day delivery" },
   { ...base, id:"p11", name:"Natural Skincare Essentials Kit", brand:"Pure Form", category:"Beauty", price:39.99, rating:4.8, reviewCount:1732, sold:3200, emoji:"🧴", sku:"SK-NAT-5", stock:75, status:"Active", productVerified:true, delivery:"Free delivery" },
   { ...base, id:"p12", name:"All-in-One Wireless Printer", brand:"Nova Office", category:"Business Supplies", price:159.99, oldPrice:189.99, rating:4.5, reviewCount:420, sold:670, emoji:"🖨️", sku:"PR-AIO-W", stock:26, status:"Active", delivery:"Fast delivery", warranty:"2-year warranty" },
+  { ...base, id:"f3", name:"Premium Leather Trainers", brand:"Motion", category:"Fashion", price:74.99, rating:4.8, reviewCount:540, sold:820, emoji:"👞", sku:"LT-PREM", stock:28, status:"Active", delivery:"Fast delivery" },
+  { ...base, id:"f4", name:"Structured Everyday Tote", brand:"Arc & Co.", category:"Fashion", price:69.99, rating:4.7, reviewCount:430, sold:610, emoji:"👜", sku:"TOTE-EV", stock:36, status:"Active", delivery:"3-day delivery" },
+  { ...base, id:"f5", name:"Lightweight City Jacket", brand:"Motion", category:"Fashion", price:84.99, rating:4.8, reviewCount:680, sold:940, emoji:"🧥", sku:"JKT-CITY", stock:22, status:"Active", delivery:"Fast delivery" },
 ];
 
-export const sellers: Seller[] = [
+const sellerForCategory = (category: string) => category.includes("Home") || category === "Beauty" ? "s2" : category === "Fashion" ? "s3" : "s1";
+const categorySlugFor = (category:string) => ({ "Home & Living":"home-and-kitchen", Fashion:"fashion-and-apparel", "Business Supplies":"business-and-office-supplies", Beauty:"beauty-and-personal-care" })[category] ?? toSlug(category);
+export const products: Product[] = rawProducts.map((product) => ({ ...product, slug:toSlug(product.name), categorySlug:categorySlugFor(product.category), sellerId:sellerForCategory(product.category) }));
+
+const rawSellers: Omit<Seller, "slug" | "verified" | "storeId">[] = [
   { id:"s1", name:"Nova Technology Store", logo:"N", country:"Singapore", rating:4.9, feedback:98, responseRate:97, completedOrders:12400, yearsActive:6, followers:48600, featured:["💻","🎧","⌚"] },
   { id:"s2", name:"Hearth & Haven", logo:"H", country:"United Kingdom", rating:4.8, feedback:97, responseRate:95, completedOrders:8750, yearsActive:4, followers:27100, featured:["☕","🍽️","🪑"] },
   { id:"s3", name:"Motion Supply Co.", logo:"M", country:"Germany", rating:4.7, feedback:96, responseRate:98, completedOrders:9320, yearsActive:5, followers:31800, featured:["👟","💼","🎒"] },
 ];
+export const sellers: Seller[] = rawSellers.map((seller) => ({ ...seller, slug:toSlug(seller.name), verified:true, storeId:`store-${seller.id}` }));
 
 export const wholesale: Product[] = [
-  { ...products[8], id:"w1", name:"Restaurant Ceramic Sets — 24 Pack", price:289, moq:5, supplierCountry:"Portugal" },
-  { ...products[9], id:"w2", name:"Ergonomic Office Chairs — Bulk", price:139, moq:10, supplierCountry:"Germany" },
-  { ...products[7], id:"w3", name:"Wireless Earbuds — Custom Brand", price:12.5, moq:100, supplierCountry:"Vietnam" },
+  { ...products[8], id:"w1", slug:toSlug("Restaurant Ceramic Sets — 24 Pack"), name:"Restaurant Ceramic Sets — 24 Pack", price:289, moq:5, supplierCountry:"Portugal" },
+  { ...products[9], id:"w2", slug:toSlug("Ergonomic Office Chairs — Bulk"), name:"Ergonomic Office Chairs — Bulk", price:139, moq:10, supplierCountry:"Germany" },
+  { ...products[7], id:"w3", slug:toSlug("Wireless Earbuds — Custom Brand"), name:"Wireless Earbuds — Custom Brand", price:12.5, moq:100, supplierCountry:"Vietnam" },
 ];
+export const allProducts = [...products, ...wholesale];
+
+export const getProductById = (id:string) => allProducts.find((product) => product.id === id);
+export const getProductBySlug = (slug:string) => allProducts.find((product) => product.slug === slug);
+export const getSellerById = (id:string) => sellers.find((seller) => seller.id === id);
+export const getSellerBySlug = (slug:string) => sellers.find((seller) => seller.slug === slug);
+export const getProductsBySellerId = (sellerId:string) => allProducts.filter((product) => product.sellerId === sellerId);
+export const getCategoryBySlug = (slug:string) => categories.find((category) => category.slug === slug);
+export const getProductsByCategorySlug = (slug:string) => allProducts.filter((product) => product.categorySlug === slug);
+
+export function validateMarketplaceData(): string[] {
+  const errors:string[] = [];
+  const duplicates = <T,>(values:T[]) => values.filter((value, index) => values.indexOf(value) !== index);
+  for (const id of duplicates(allProducts.map((product) => product.id))) errors.push(`Duplicate product id: ${id}`);
+  for (const slug of duplicates(allProducts.map((product) => product.slug))) errors.push(`Duplicate product slug: ${slug}`);
+  for (const slug of duplicates(sellers.map((seller) => seller.slug))) errors.push(`Duplicate seller slug: ${slug}`);
+  for (const product of allProducts) {
+    if (!getSellerById(product.sellerId)) errors.push(`Missing seller for product: ${product.id}`);
+    if (!getCategoryBySlug(product.categorySlug)) errors.push(`Missing category for product: ${product.id}`);
+    if (!Number.isFinite(product.price) || product.price < 0) errors.push(`Invalid price for product: ${product.id}`);
+    if (!Number.isInteger(product.stock) || product.stock < 0) errors.push(`Invalid stock for product: ${product.id}`);
+  }
+  return errors;
+}
 export const orders: Order[] = [
   { id:"WIV-2026-00123", item:"Smart Watch Series 8", date:"July 12, 2026", total:89.99, status:"Delivered", emoji:"⌚" },
   { id:"WIV-2026-00122", item:"Running Sneakers", date:"July 10, 2026", total:129.99, status:"In transit", emoji:"👟" },

@@ -95,7 +95,7 @@ export function HomepageExperience() {
           {categories.map((c) => (
             <Link
               key={c.name}
-              href={`/category/${c.name.toLowerCase().replaceAll(" ", "-")}`}
+              href={`/category/${c.slug}`}
             >
               <span>{c.icon}</span>
               {c.name}
@@ -209,7 +209,7 @@ export function HomepageExperience() {
         <Heading eyebrow="EXPLORE THE MARKETPLACE" title="Shop by category" />
         <div className="category-row">
           {categories.slice(0, 8).map((c, i) => (
-            <Link href={`/category/${c.name}`} key={c.name}>
+            <Link href={`/category/${c.slug}`} key={c.name}>
               <span>{["📱", "💻", "🎧", "☕", "👟", "⌚", "🧴", "🍽️"][i]}</span>
               <b>{c.name}</b>
             </Link>
@@ -317,28 +317,7 @@ export function HomepageExperience() {
       <section className="section">
         <Heading eyebrow="STYLE EDIT" title="Fashion picks" />
         <div className="product-rail">
-          {[
-            products[3],
-            products[5],
-            {
-              ...products[3],
-              id: "f3",
-              name: "Premium Leather Trainers",
-              emoji: "👞",
-            },
-            {
-              ...products[5],
-              id: "f4",
-              name: "Structured Everyday Tote",
-              emoji: "👜",
-            },
-            {
-              ...products[3],
-              id: "f5",
-              name: "Lightweight City Jacket",
-              emoji: "🧥",
-            },
-          ].map((p) => (
+          {[products[3], products[5], ...products.filter((p) => ["f3", "f4", "f5"].includes(p.id))].map((p) => (
             <ProductCard key={p.id} product={p} variant="compact" />
           ))}
         </div>
@@ -402,7 +381,7 @@ export function HomepageExperience() {
                   <span key={i}>{x}</span>
                 ))}
               </div>
-              <Link href={`/store/${s.id}`}>
+              <Link href={`/store/${s.slug}`}>
                 Visit Store <ArrowRight />
               </Link>
             </article>

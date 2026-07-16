@@ -8,4 +8,4 @@ import "../styles/search.css";
 import "../styles/quality.css";
 
 export const metadata:Metadata={title:{default:"Weivas — Good things, handpicked for you",template:"%s | Weivas"},description:"A premium global marketplace connecting buyers with verified sellers."};
-export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en"><body>{children}</body></html>}
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="en" data-scroll-behavior="smooth"><body>{children}</body></html>}
