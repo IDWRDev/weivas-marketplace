@@ -27,28 +27,28 @@ const slides = [
     title: "Good things, handpicked for you.",
     copy: "Millions of quality products from verified suppliers, delivered with care.",
     cta: "Shop Now",
-    emoji: ["??", "??", "?", "?"],
+    emoji: ["🧳", "🎧", "⌚", "☕"],
   },
   {
     tag: "SMARTER EVERYDAY",
     title: "Technology that moves with you.",
     copy: "Verified electronics, helpful warranties and fast global delivery.",
     cta: "Shop Electronics",
-    emoji: ["??", "??", "?", "??"],
+    emoji: ["💻", "🎧", "⌚", "📱"],
   },
   {
     tag: "HOME & LIFESTYLE",
     title: "Make every space feel more like you.",
     copy: "Warm, useful finds for kitchens, living rooms and everyday rituals.",
     cta: "Explore Home",
-    emoji: ["?", "??", "???", "??"],
+    emoji: ["☕", "🪑", "🍽️", "🪴"],
   },
   {
     tag: "WHOLESALE SOURCING",
     title: "Buy more. Build more. Grow further.",
     copy: "Request quotes from verified suppliers with global shipping options.",
     cta: "Source in Bulk",
-    emoji: ["??", "???", "??", "??"],
+    emoji: ["📦", "🖨️", "💼", "🌍"],
   },
 ];
 function Heading({
@@ -92,7 +92,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
     <main>
       <div className="market-grid">
         <aside className="categories">
-          <h2>All Categories</h2>
+          <h2>☷ All Categories</h2>
           {categories.map((c) => (
             <Link
               key={c.name}
@@ -132,12 +132,13 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
               </Link>
             </div>
           </div>
-          <div className="hero-products" aria-label="Curated marketplace benefits">
-            <div className="hero-orbit hero-orbit-one" />
-            <div className="hero-orbit hero-orbit-two" />
-            <article className="hero-feature-card hero-feature-primary"><span><Headphones /></span><small>EDITOR&apos;S PICK</small><b>Verified essentials</b><p>Quality checked sellers</p></article>
-            <article className="hero-feature-card hero-feature-secondary"><PackageCheck/><div><small>BUYER PROTECTION</small><b>Shop with confidence</b></div></article>
-            <div className="hero-proof"><ShieldCheck/><span><b>Secure by design</b><small>Protected marketplace checkout</small></span></div>
+          <div
+            className="hero-products"
+            aria-label="Featured product composition"
+          >
+            {s.emoji.map((e, i) => (
+              <span key={`${slide}-${i}`}>{e}</span>
+            ))}
           </div>
           <div className="carousel-controls">
             <button
@@ -184,7 +185,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
             <span>-40%</span>
             <h3>Deal of the Day</h3>
             <b>{clock}</b>
-            <i>?</i>
+            <i>⌚</i>
             <strong>$59.99</strong>
           </div>
         </aside>
@@ -210,7 +211,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
         <div className="category-row">
           {categories.slice(0, 8).map((c, i) => (
             <Link href={`/category/${c.slug}`} key={c.name}>
-              <span>{["??", "??", "??", "?", "??", "?", "??", "???"][i]}</span>
+              <span>{["📱", "💻", "🎧", "☕", "👟", "⌚", "🧴", "🍽️"][i]}</span>
               <b>{c.name}</b>
             </Link>
           ))}
@@ -227,21 +228,21 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
           <p>Bigger orders. Bigger savings.</p>
           <b>Up to 30% off</b>
           <Link href="#wholesale">Request a Quote</Link>
-          <span>??</span>
+          <span>📦</span>
         </article>
         <article className="campaign">
           <small>JUST LANDED</small>
           <h2>New Arrivals</h2>
           <p>Fresh finds for every day.</p>
           <Link href="#new">Shop Now</Link>
-          <span>??</span>
+          <span>👟</span>
         </article>
         <article className="campaign">
           <small>GROW WITH WEIVAS</small>
           <h2>Sell on Weivas</h2>
           <p>Take your business global.</p>
           <Link href="/sell">Become a Seller</Link>
-          <span>?</span>
+          <span>↗</span>
         </article>
       </section>
       <section className="section products">
@@ -308,7 +309,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
             <br />
             beautifully considered.
           </h2>
-          <div>? ??? ??</div>
+          <div>☕　🍽️　🪴</div>
           <Link href="/search">
             Shop the collection <ArrowRight />
           </Link>
@@ -334,7 +335,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
             Shop business supplies
           </Link>
         </div>
-        <div>??? ?? ?? ???</div>
+        <div>🖨️　💻　🪑　🗄️</div>
       </section>
       <section className="section" id="wholesale">
         <Heading
@@ -442,7 +443,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
             "Refund eligibility",
             "Dispute support",
           ].map((x) => (
-            <p key={x}>? {x}</p>
+            <p key={x}>✓ {x}</p>
           ))}
         </article>
       </section>
@@ -458,20 +459,20 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
             Shop confidently or manage your store wherever business takes you.
           </p>
           <div className="store-buttons">
-            <button>? App Store</button>
-            <button>? Google Play</button>
+            <button> App Store</button>
+            <button>▶ Google Play</button>
           </div>
         </div>
         <div className="app-phones">
           <div>
             <b>WEIVAS</b>
             <span>Buyer app</span>
-            <i>???</i>
+            <i>🛍️</i>
           </div>
           <div>
             <b>SELLER</b>
             <span>Seller app</span>
-            <i>??</i>
+            <i>📊</i>
           </div>
           <QrCode />
         </div>
