@@ -57,11 +57,11 @@ export function MarketplaceHeader({principal}:{principal?:HeaderPrincipal}) {
         </form>
         <div className="header-actions">
           <span>
-            🇳🇬 <small>Deliver to</small>
+            <b className="country-code">NG</b> <small>Deliver to</small>
             <b>Nigeria</b>
           </span>
           <button className="locale">
-            🌐 EN / USD <ChevronDown />
+            EN / USD <ChevronDown />
           </button>
           <Link href={viewer?"/account":"/auth/sign-in"} className="account-entry">
             <UserRound />

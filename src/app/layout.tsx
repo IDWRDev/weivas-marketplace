@@ -8,6 +8,7 @@ import "../styles/search.css";
 import "../styles/quality.css";
 import "../styles/auth.css";
 import "../styles/header.css";
+import "../styles/professional.css";
 
 export const metadata:Metadata={
   metadataBase:new URL(process.env.NEXT_PUBLIC_APP_URL??"https://weivas.com"),

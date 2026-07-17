@@ -92,7 +92,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
     <main>
       <div className="market-grid">
         <aside className="categories">
-          <h2>? All Categories</h2>
+          <h2>All Categories</h2>
           {categories.map((c) => (
             <Link
               key={c.name}
@@ -132,13 +132,12 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
               </Link>
             </div>
           </div>
-          <div
-            className="hero-products"
-            aria-label="Featured product composition"
-          >
-            {s.emoji.map((e, i) => (
-              <span key={`${slide}-${i}`}>{e}</span>
-            ))}
+          <div className="hero-products" aria-label="Curated marketplace benefits">
+            <div className="hero-orbit hero-orbit-one" />
+            <div className="hero-orbit hero-orbit-two" />
+            <article className="hero-feature-card hero-feature-primary"><span><Headphones /></span><small>EDITOR&apos;S PICK</small><b>Verified essentials</b><p>Quality checked sellers</p></article>
+            <article className="hero-feature-card hero-feature-secondary"><PackageCheck/><div><small>BUYER PROTECTION</small><b>Shop with confidence</b></div></article>
+            <div className="hero-proof"><ShieldCheck/><span><b>Secure by design</b><small>Protected marketplace checkout</small></span></div>
           </div>
           <div className="carousel-controls">
             <button
