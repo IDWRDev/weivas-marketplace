@@ -95,6 +95,14 @@ enum SupportTicketStatus {
   resolved
   closed
 }
+enum PaymentStatus {
+  initialized
+  pending
+  succeeded
+  failed
+  refunded
+  manual_review
+}
 
 model User {
   id String @id @default(cuid())
@@ -349,9 +357,42 @@ model Order {
   status OrderStatus @default(pending_payment)
   sellerOrders SellerOrder[]
   addresses OrderAddress[]
+  payment Payment?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([buyerId, createdAt])
+}
+
+model Payment {
+  id String @id @default(cuid())
+  orderId String @unique
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  checkoutKey String @unique
+  provider String
+  providerReference String @unique
+  providerTransactionId String? @unique
+  authorizationUrl String?
+  accessCode String?
+  amountMinor Int
+  currency String
+  status PaymentStatus @default(initialized)
+  providerStatus String?
+  failureReason String?
+  paidAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([status, createdAt])
+}
+
+model PaymentWebhookEvent {
+  id String @id @default(cuid())
+  provider String
+  eventKey String @unique
+  eventType String
+  payloadHash String
+  processedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([provider, createdAt])
 }
 
 model SellerOrder {

@@ -11,10 +11,11 @@ export async function cancelPendingOrder(formData: FormData) {
   await db.$transaction(async (tx) => {
     const order = await tx.order.findFirst({
       where: { id: orderId, buyerId: session.user.id },
-      include: { sellerOrders: { include: { items: true } } },
+      include: { payment: true, sellerOrders: { include: { items: true } } },
     });
     if (!order) throw new Error("Order not found.");
     if (order.status !== "pending_payment") throw new Error("Only unpaid orders can be cancelled online.");
+    if (order.payment?.status === "pending") throw new Error("A Paystack payment session is already in progress. Contact support if it must be cancelled.");
 
     const changed = await tx.order.updateMany({
       where: { id: order.id, buyerId: session.user.id, status: "pending_payment" },

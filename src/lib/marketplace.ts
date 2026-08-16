@@ -5,7 +5,7 @@ export function toSlug(value: string): string {
 }
 
 export const toMinor = (value: number) => Math.round(value * 100);
-export const formatCurrency = (minor: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(minor / 100);
+export const formatCurrency = (minor: number, currency = "NGN") => new Intl.NumberFormat("en", { style: "currency", currency }).format(minor / 100);
 
 export type ResolvedCartItem = CartItem & { product: Product; lineTotalMinor: number };
 export function resolveCartItems(items: CartItem[], products: Product[]): ResolvedCartItem[] {

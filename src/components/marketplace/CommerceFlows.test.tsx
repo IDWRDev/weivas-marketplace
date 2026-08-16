@@ -38,7 +38,7 @@ describe("commerce flows",()=>{
     fireEvent.click(screen.getByRole("button",{name:"Buy now"}));
     expect(push).toHaveBeenCalledWith("/checkout");
     expect(useMarketplaceStore.getState().cart).toEqual({});
-    expect(useMarketplaceStore.getState().checkout).toEqual({mode:"buy_now",items:[{productId:"p4",quantity:2}]});
+    expect(useMarketplaceStore.getState().checkout).toEqual(expect.objectContaining({mode:"buy_now",items:[{productId:"p4",quantity:2}],checkoutKey:expect.any(String)}));
     productView.unmount();
     const checkoutView=render(<CheckoutExperience/>);
     expect(within(checkoutView.container).getByText(`${product.name} × 2`)).toBeInTheDocument();
