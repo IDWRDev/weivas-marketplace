@@ -18,7 +18,7 @@ const checkoutSchema = z.object({
 export async function placeOrder(formData: FormData) {
   const session = await requireArea("account", "/checkout");
   const env = getServerEnv();
-  if (env.PAYMENT_PROVIDER !== "paystack" || env.SHIPMENT_PROVIDER !== "shipbubble") throw new Error("Online checkout requires both Paystack and Shipbubble to be active.");
+  if (!env.CHECKOUT_ENABLED || env.PAYMENT_PROVIDER !== "paystack" || env.SHIPMENT_PROVIDER !== "shipbubble") throw new Error("Online checkout has not passed its release gate yet.");
   const parsed = checkoutSchema.parse({ addressId: formData.get("addressId"), checkoutKey: formData.get("checkoutKey"), items: JSON.parse(String(formData.get("items") ?? "[]")) });
   if (new Set(parsed.items.map(item => item.productId)).size !== parsed.items.length) throw new Error("Duplicate checkout items are not allowed.");
 

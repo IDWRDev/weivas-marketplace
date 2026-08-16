@@ -10,6 +10,7 @@ const serverEnvSchema = z.object({
   PAYMENT_SECRET_KEY: z.string().optional(),
   PAYMENT_PUBLIC_KEY: z.string().optional(),
   MARKETPLACE_CURRENCY: z.string().length(3).default("NGN"),
+  CHECKOUT_ENABLED: z.enum(["true", "false"]).default("false").transform(value => value === "true"),
   STORAGE_PROVIDER: z.enum(["development", "s3-compatible"]).default("development"),
   STORAGE_BUCKET: z.string().optional(),
   STORAGE_ACCESS_KEY: z.string().optional(),
@@ -22,6 +23,7 @@ const serverEnvSchema = z.object({
   if(env.PAYMENT_PROVIDER!=="none"&&(!env.PAYMENT_SECRET_KEY||!env.PAYMENT_PUBLIC_KEY))ctx.addIssue({code:"custom",message:"Payment provider keys are required when online payments are enabled."});
   if(env.STORAGE_PROVIDER==="s3-compatible"&&(!env.STORAGE_BUCKET||!env.STORAGE_ACCESS_KEY||!env.STORAGE_SECRET_KEY||!env.STORAGE_ENDPOINT||!env.STORAGE_PUBLIC_URL))ctx.addIssue({code:"custom",message:"R2 storage settings are incomplete."});
   if(env.SHIPMENT_PROVIDER==="shipbubble"&&!env.SHIPBUBBLE_API_KEY)ctx.addIssue({code:"custom",message:"Shipbubble API key is required when shipping is enabled."});
+  if(env.CHECKOUT_ENABLED&&(env.PAYMENT_PROVIDER!=="paystack"||env.SHIPMENT_PROVIDER!=="shipbubble"))ctx.addIssue({code:"custom",message:"Checkout can be enabled only with Paystack and Shipbubble configured."});
 });
 
 export function getServerEnv() {

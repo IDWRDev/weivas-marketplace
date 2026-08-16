@@ -10,7 +10,7 @@
 
 ## Activation gates
 
-Checkout remains disabled until Paystack and Shipbubble test credentials are both configured. This prevents WEIVAS from charging a product-only total before a real delivery quote is included.
+Checkout remains disabled until Paystack and Shipbubble test credentials are configured and `CHECKOUT_ENABLED=true` is set after delivery-quote acceptance testing. This prevents WEIVAS from charging a product-only total before a real delivery quote is included.
 
 Required production environment variables are documented in `.env.example`. Secrets must be stored in Vercel and local environment files, never committed.
 
