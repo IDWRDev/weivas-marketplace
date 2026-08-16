@@ -20,9 +20,9 @@ describe("cart calculations",()=>{
   const items=resolveCartItems([{productId:"p1",quantity:2},{productId:"p4",quantity:1}],allProducts);
   it("counts quantities",()=>expect(getCartItemCount(items)).toBe(3));
   it("calculates line and subtotal values in minor units",()=>expect(items[0].lineTotalMinor).toBe(Math.round(allProducts.find((p)=>p.id==="p1")!.price*100)*2));
-  it("calculates promotional discount",()=>expect(getCartDiscount(20_000)).toBe(2_000));
-  it("calculates shipping from the mock rule",()=>{expect(getCartShipping(4_999)).toBe(599);expect(getCartShipping(5_000)).toBe(0)});
-  it("calculates rounded tax",()=>expect(getCartTax(10_001)).toBe(750));
+  it("does not invent a promotion without a configured discount",()=>expect(getCartDiscount(20_000)).toBe(0));
+  it("does not invent shipping before a delivery quote",()=>expect(getCartShipping(4_999)).toBe(0));
+  it("does not invent tax before a configured tax calculation",()=>expect(getCartTax(10_001)).toBe(0));
   it("calculates a consistent total",()=>{const totals=getCartTotals(items);expect(totals.totalMinor).toBe(totals.subtotalMinor-totals.discountMinor+totals.shippingMinor+totals.taxMinor)});
   it("groups items by their real seller",()=>{const groups=getCartItemsBySeller(items);expect([...groups].every(([sellerId,group])=>group.every((item)=>item.product.sellerId===sellerId))).toBe(true)});
   it("does not resolve phantom products from an empty cart",()=>expect(resolveCartItems([],allProducts)).toEqual([]));

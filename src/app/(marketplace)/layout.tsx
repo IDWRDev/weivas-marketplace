@@ -1,4 +1,8 @@
-import Link from "next/link";
 import { MarketplaceHeader } from "@/components/layout/MarketplaceHeader";
-const footerColumns=[["Shop","Categories","Deals","New arrivals","Wholesale"],["Customer Care","Help centre","Buyer protection","Returns","Contact support"],["Sell on Weivas","Become a seller","Seller centre","Seller policies","Payouts"],["Company","About Weivas","Careers","Press","Sustainability"],["Resources","Weivas Pay","Logistics","Countries","Developers"],["Legal","Privacy","Terms","Cookies","Accessibility"]];
-export default function MarketplaceLayout({children}:{children:React.ReactNode}){return <><MarketplaceHeader/>{children}<footer className="global-footer"><div className="footer-promise"><h2>Verify. Connect. <em>Empower.</em></h2><p>Good things, handpicked for you.</p><p>Premium global commerce from verified sellers, brands and suppliers.</p></div>{footerColumns.map(col=><div key={col[0]}><b>{col[0]}</b>{col.slice(1).map(x=><a key={x}>{x}</a>)}</div>)}<div className="footer-settings"><span>🌍 Countries</span><span>English</span><span>USD</span><span>Visa · Mastercard · PayPal</span><span>Instagram · X · LinkedIn</span></div><small>© 2026 Weivas. Marketplace, payment, logistics and verification capabilities shown here use demonstration data until integrations are connected.</small></footer><nav className="mobile-bottom" aria-label="Mobile navigation"><Link href="/">⌂<span>Home</span></Link><Link href="/search">⌕<span>Search</span></Link><Link href="/account/wishlist">♡<span>Wishlist</span></Link><Link href="/cart">🛒<span>Cart</span></Link><Link href="/account">♙<span>Account</span></Link></nav></>}
+import { MarketplaceFooter } from "@/components/layout/MarketplaceFooter";
+import { db } from "@/server/db/client";
+
+export default async function MarketplaceLayout({children}:{children:React.ReactNode}){
+  const categories=await db.category.findMany({where:{status:"active"},select:{id:true,slug:true,name:true},orderBy:{name:"asc"},take:30});
+  return <><MarketplaceHeader categories={categories.map(category=>({...category,icon:"•"}))}/>{children}<MarketplaceFooter/></>;
+}

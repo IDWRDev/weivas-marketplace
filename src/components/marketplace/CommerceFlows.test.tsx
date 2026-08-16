@@ -21,9 +21,9 @@ describe("commerce flows",()=>{
   });
 
   it("updates quantity totals and reveals the empty state after removing the last item",()=>{
-    act(()=>useMarketplaceStore.getState().addToCart("p1"));
-    render(<CartExperience/>);
     const product=getProductById("p1")!;
+    act(()=>{useMarketplaceStore.getState().rememberProduct(product);useMarketplaceStore.getState().addToCart("p1")});
+    render(<CartExperience/>);
     expect(screen.getByText(product.name)).toBeInTheDocument();
     fireEvent.click(screen.getByLabelText(`Increase ${product.name}`));
     expect(screen.getByText("2")).toBeInTheDocument();
@@ -47,10 +47,11 @@ describe("commerce flows",()=>{
 
   it("links products to their canonical seller and limits a store to that seller",()=>{
     const product=getProductById("p4")!; const seller=getSellerById(product.sellerId)!;
-    const productView=render(<ProductExperience product={product}/>);
+    const view={...product,sellerName:seller.name,sellerSlug:seller.slug};
+    const productView=render(<ProductExperience product={view}/>);
     expect(within(productView.container).getByRole("link",{name:new RegExp(`Sold by ${seller.name}`)})).toHaveAttribute("href",`/store/${seller.slug}`);
     productView.unmount();
-    const storeView=render(<StoreExperience seller={seller}/>);
+    const storeView=render(<StoreExperience seller={seller} products={getProductsBySellerId(seller.id)}/>);
     for(const owned of getProductsBySellerId(seller.id)) expect(within(storeView.container).getByText(owned.name)).toBeInTheDocument();
     expect(within(storeView.container).queryByText(getProductById("p1")!.name)).not.toBeInTheDocument();
   });

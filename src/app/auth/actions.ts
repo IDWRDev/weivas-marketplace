@@ -21,8 +21,28 @@ export async function registerAction(_:AuthActionState,formData:FormData):Promis
   const exists=await db.user.findUnique({where:{email:parsed.data.email},select:{id:true}});
   if(exists)return{message:"Unable to create this account. Try signing in or recovering your password."};
   const passwordHash=await hashPassword(parsed.data.password);
-  await db.user.create({data:{email:parsed.data.email,passwordHash,firstName:parsed.data.firstName,lastName:parsed.data.lastName,phone:parsed.data.phone,status:"active",roles:{create:{role:"buyer"}},buyerProfile:{create:{}},wishlist:{create:{}},notificationPreference:{create:{}}}});
-  redirect("/auth/sign-in?registered=1");
+  const token=randomBytes(32).toString("hex");
+  const tokenHash=createHash("sha256").update(token).digest("hex");
+  await db.$transaction(async(tx)=>{
+    await tx.user.create({data:{email:parsed.data.email,passwordHash,firstName:parsed.data.firstName,lastName:parsed.data.lastName,phone:parsed.data.phone,status:"pending",roles:{create:{role:"buyer"}},buyerProfile:{create:{}},wishlist:{create:{}},notificationPreference:{create:{}}}});
+    await tx.verificationToken.create({data:{identifier:parsed.data.email,tokenHash,expires:new Date(Date.now()+24*60*60_000)}});
+  });
+  const verificationUrl=`${getServerEnv().NEXT_PUBLIC_APP_URL}/auth/verify-email?token=${token}`;
+  try{await getEmailService().sendVerification(parsed.data.email,verificationUrl)}catch(error){console.error("Verification email delivery failed.",error instanceof Error?error.message:"Unknown provider error");return{message:"Your account was created, but the verification email could not be delivered. Contact support for assistance."}}
+  redirect(process.env.NODE_ENV==="production"?"/auth/verify-email?sent=1":`/auth/verify-email?token=${token}`);
+}
+
+export async function resendVerificationAction(_:AuthActionState,formData:FormData):Promise<AuthActionState>{
+  const email=String(formData.get("email")??"").trim().toLowerCase();
+  if(!email.includes("@"))return{message:"Enter a valid email address."};
+  const ip=requestIp(await headers());
+  if(!await consumeAuthAttempt("email-verification",email,ip,{maxAttempts:3,windowMs:60*60_000,blockMs:60*60_000}))return{message:"Please wait before requesting another verification email."};
+  const user=await db.user.findUnique({where:{email},select:{email:true,emailVerifiedAt:true}});
+  if(!user||user.emailVerifiedAt)return{message:"If this account needs verification, a new email will be sent."};
+  const token=randomBytes(32).toString("hex");const tokenHash=createHash("sha256").update(token).digest("hex");
+  await db.$transaction([db.verificationToken.deleteMany({where:{identifier:email}}),db.verificationToken.create({data:{identifier:email,tokenHash,expires:new Date(Date.now()+24*60*60_000)}})]);
+  try{await getEmailService().sendVerification(email,`${getServerEnv().NEXT_PUBLIC_APP_URL}/auth/verify-email?token=${token}`)}catch(error){console.error("Verification email delivery failed.",error instanceof Error?error.message:"Unknown provider error")}
+  return{message:"If this account needs verification, a new email will be sent."};
 }
 
 export async function forgotPasswordAction(_:AuthActionState,formData:FormData):Promise<AuthActionState>{

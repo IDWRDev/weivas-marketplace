@@ -5,11 +5,11 @@ import { authOptions } from "./config";
 import { canAccessProtectedArea } from "./permissions";
 
 export async function getSession(){return getServerSession(authOptions)}
-export async function requireArea(area:"account"|"seller"|"admin"){
+export async function requireArea(area:"account"|"seller"|"admin", callbackUrl=`/${area}`){
   const session=await getSession();
   const access=canAccessProtectedArea(session?.user,area);
   if(access.allowed)return session!;
-  if(access.reason==="sign_in")redirect(`${area==="seller"?"/auth/seller-sign-in":"/auth/sign-in"}?callbackUrl=/${area}`);
+  if(access.reason==="sign_in")redirect(`${area==="seller"?"/auth/seller-sign-in":"/auth/sign-in"}?callbackUrl=${encodeURIComponent(callbackUrl)}`);
   if(access.reason==="seller_application")redirect("/sell/onboarding");
   if(access.reason==="seller_status")redirect("/sell/status");
   if(access.reason==="account_status")redirect("/auth/unauthorised?reason=account-status");

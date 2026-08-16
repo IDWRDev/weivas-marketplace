@@ -88,6 +88,13 @@ enum AddressType {
   shipping
   billing
 }
+enum SupportTicketStatus {
+  open
+  in_progress
+  waiting_on_customer
+  resolved
+  closed
+}
 
 model User {
   id String @id @default(cuid())
@@ -110,6 +117,7 @@ model User {
   recentlyViewed RecentlyViewedProduct[]
   notificationPreference NotificationPreference?
   securityEvents SecurityEvent[]
+  supportTickets SupportTicket[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -475,4 +483,23 @@ model AuthRateLimit {
   blockedUntil DateTime?
   updatedAt DateTime @updatedAt
   @@index([updatedAt])
+}
+
+model SupportTicket {
+  id String @id @default(cuid())
+  reference String @unique
+  userId String?
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name String
+  email String
+  category String
+  subject String
+  message String
+  status SupportTicketStatus @default(open)
+  assignedTo String?
+  resolvedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([status, createdAt])
+  @@index([userId, createdAt])
 }

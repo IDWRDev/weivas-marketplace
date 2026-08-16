@@ -18,9 +18,9 @@ export function resolveCartItems(items: CartItem[], products: Product[]): Resolv
 }
 export const getCartItemCount = (items: CartItem[]) => items.reduce((sum, item) => sum + Math.max(0, item.quantity), 0);
 export const getCartSubtotal = (items: ResolvedCartItem[]) => items.reduce((sum, item) => sum + item.lineTotalMinor, 0);
-export const getCartDiscount = (subtotalMinor: number) => subtotalMinor >= 20_000 ? Math.round(subtotalMinor * 0.1) : 0;
-export const getCartShipping = (subtotalMinor: number) => subtotalMinor === 0 || subtotalMinor >= 5_000 ? 0 : 599;
-export const getCartTax = (taxableMinor: number) => Math.round(Math.max(0, taxableMinor) * 0.075);
+export const getCartDiscount = (subtotalMinor: number) => subtotalMinor * 0;
+export const getCartShipping = (subtotalMinor: number) => subtotalMinor * 0;
+export const getCartTax = (taxableMinor: number) => taxableMinor * 0;
 export function getCartTotals(items: ResolvedCartItem[]) {
   const subtotalMinor = getCartSubtotal(items);
   const discountMinor = getCartDiscount(subtotalMinor);

@@ -13,26 +13,21 @@ import {
   ShoppingCart,
   Truck,
 } from "lucide-react";
-import {
-  categories,
-  products as mockProducts,
-  sellers,
-  wholesale,
-} from "@/data/mock/marketplace";
+import type { Category, Product } from "@/types/marketplace";
 import { ProductCard } from "./ProductCard";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 const slides = [
   {
     tag: "GLOBAL MARKETPLACE",
     title: "Good things, handpicked for you.",
-    copy: "Millions of quality products from verified suppliers, delivered with care.",
+    copy: "Explore approved products from active sellers, with clear pricing and seller information.",
     cta: "Shop Now",
     emoji: ["🧳", "🎧", "⌚", "☕"],
   },
   {
     tag: "SMARTER EVERYDAY",
     title: "Technology that moves with you.",
-    copy: "Verified electronics, helpful warranties and fast global delivery.",
+    copy: "Approved electronics listings with seller-provided warranty and fulfilment information.",
     cta: "Shop Electronics",
     emoji: ["💻", "🎧", "⌚", "📱"],
   },
@@ -46,7 +41,7 @@ const slides = [
   {
     tag: "WHOLESALE SOURCING",
     title: "Buy more. Build more. Grow further.",
-    copy: "Request quotes from verified suppliers with global shipping options.",
+    copy: "Discover listings that support larger order quantities from approved sellers.",
     cta: "Source in Bulk",
     emoji: ["📦", "🖨️", "💼", "🌍"],
   },
@@ -72,22 +67,10 @@ function Heading({
     </div>
   );
 }
-export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import("@/types/marketplace").Product[]}) {
-  const products=[...catalogProducts,...mockProducts.filter(mock=>!catalogProducts.some(product=>product.id===mock.id))];
+export function HomepageExperience({catalogProducts=[],categories=[],featuredStores=[]}:{catalogProducts?:Product[];categories?:Category[];featuredStores?:{id:string;slug:string;name:string;country:string;verified:boolean;productCount:number}[]}) {
+  const products=catalogProducts;
   const [slide, setSlide] = useState(0);
-  const [time, setTime] = useState(8 * 3600 + 45 * 60 + 22);
-  useEffect(() => {
-    const id = setInterval(() => setTime((v) => Math.max(0, v - 1)), 1000);
-    return () => clearInterval(id);
-  }, []);
   const s = slides[slide];
-  const clock = [
-    Math.floor(time / 3600),
-    Math.floor((time % 3600) / 60),
-    time % 60,
-  ]
-    .map((n) => String(n).padStart(2, "0"))
-    .join(" : ");
   return (
     <main>
       <div className="market-grid">
@@ -172,30 +155,28 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
           <div>
             <ShieldCheck />
             <h3>Weivas Pay</h3>
-            <p>Safe checkout demonstration.</p>
-            <b>VISA · Mastercard · PayPal</b>
+            <p>Payment methods will appear after provider activation.</p>
+            <b>No payment credentials are collected yet.</b>
           </div>
           <div>
             <PackageCheck />
             <h3>Buyer Protection</h3>
-            <p>Refund-eligible purchases</p>
-            <p>Dispute support</p>
+            <p>Clear seller policies</p>
+            <p>Order-linked support</p>
           </div>
           <div className="side-deal">
-            <span>-40%</span>
-            <h3>Deal of the Day</h3>
-            <b>{clock}</b>
-            <i>⌚</i>
-            <strong>$59.99</strong>
+            <h3>Recently added</h3>
+            <p>{products.length?`${products.length} approved product${products.length===1?"":"s"} available`:"Approved products will appear here."}</p>
+            <i>📦</i>
           </div>
         </aside>
       </div>
       <section className="trust-strip">
         {[
-          ["Global Sourcing", "Millions of products", CreditCard],
-          ["Verified Suppliers", "Quality assured", BadgeCheck],
-          ["Secure Payments", "Protected checkout", ShieldCheck],
-          ["Fast Delivery", "Worldwide shipping", Truck],
+          ["Approved Catalogue", "Active listings only", PackageCheck],
+          ["Verified Suppliers", "Reviewed seller status", BadgeCheck],
+          ["Account Security", "Protected sign-in", ShieldCheck],
+          ["Order Support", "Trackable help requests", Headphones],
         ].map(([a, b, I]) => (
           <div key={String(a)}>
             {typeof I !== "string" && <I />}
@@ -226,8 +207,8 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
           <small>BUSINESS SAVINGS</small>
           <h2>Bulk Order Discounts</h2>
           <p>Bigger orders. Bigger savings.</p>
-          <b>Up to 30% off</b>
-          <Link href="#wholesale">Request a Quote</Link>
+          <b>Seller-defined pricing</b>
+          <Link href="#wholesale">Explore bulk listings</Link>
           <span>📦</span>
         </article>
         <article className="campaign">
@@ -253,12 +234,11 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
           ))}
         </div>
       </section>
-      <section className="section deal-section">
+      {products.some(product=>product.oldPrice&&product.oldPrice>product.price)&&<section className="section deal-section">
         <Heading eyebrow="LIMITED-TIME SAVINGS" title="Deals of the day" />
         <div className="deal-layout">
           <div className="deal-clock">
-            <small>ENDS IN</small>
-            <b>{clock}</b>
+            <small>ACTIVE LISTING SAVINGS</small>
             <h3>
               Handpicked savings,
               <br />
@@ -269,12 +249,12 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
             </Link>
           </div>
           <div className="deal-products">
-            {products.slice(1, 5).map((p) => (
+            {products.filter(product=>product.oldPrice&&product.oldPrice>product.price).slice(0, 4).map((p) => (
               <ProductCard key={p.id} product={p} variant="deal" />
             ))}
           </div>
         </div>
-      </section>
+      </section>}
       <section className="section" id="new">
         <Heading eyebrow="FRESHLY ADDED" title="New arrivals" />
         <div className="product-rail">
@@ -318,7 +298,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
       <section className="section">
         <Heading eyebrow="STYLE EDIT" title="Fashion picks" />
         <div className="product-rail">
-          {[products[3], products[5], ...products.filter((p) => ["f3", "f4", "f5"].includes(p.id))].map((p) => (
+          {products.filter((p) => p.category.toLowerCase().includes("fashion")).slice(0,8).map((p) => (
             <ProductCard key={p.id} product={p} variant="compact" />
           ))}
         </div>
@@ -344,7 +324,7 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
           link="Explore sourcing"
         />
         <div className="wholesale-grid">
-          {wholesale.map((p) => (
+          {products.filter(product=>(product.moq??1)>1).map((p) => (
             <ProductCard key={p.id} product={p} variant="wholesale" />
           ))}
         </div>
@@ -352,10 +332,10 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
       <section className="section">
         <Heading eyebrow="TRUSTED STOREFRONTS" title="Featured sellers" />
         <div className="seller-cards">
-          {sellers.map((s) => (
+          {featuredStores.map((s) => (
             <article key={s.id}>
               <div className="seller-head">
-                <i>{s.logo}</i>
+                <i>W</i>
                 <div>
                   <h3>{s.name}</h3>
                   <span>
@@ -365,22 +345,8 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
               </div>
               <div className="seller-stats">
                 <span>
-                  <b>{s.rating}</b> rating
+                  <b>{s.productCount}</b> active products
                 </span>
-                <span>
-                  <b>{s.feedback}%</b> feedback
-                </span>
-                <span>
-                  <b>{s.responseRate}%</b> response
-                </span>
-                <span>
-                  <b>{s.completedOrders.toLocaleString()}</b> orders
-                </span>
-              </div>
-              <div className="seller-products">
-                {s.featured.map((x, i) => (
-                  <span key={i}>{x}</span>
-                ))}
               </div>
               <Link href={`/store/${s.slug}`}>
                 Visit Store <ArrowRight />
@@ -390,14 +356,9 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
         </div>
       </section>
       <section className="brand-strip">
-        <small>TRUSTED GLOBAL BRANDS</small>
+        <small>BRANDS FROM APPROVED LISTINGS</small>
         <div>
-          <b>NOVA</b>
-          <b>kinetic</b>
-          <b>ORIGO</b>
-          <b>HEARTH</b>
-          <b>MOTION</b>
-          <b>ARC & CO.</b>
+          <b>Brand information appears as sellers publish reviewed products.</b>
         </div>
       </section>
       <section className="section pay-protection">
@@ -410,9 +371,8 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
               to successful delivery.
             </h2>
             <p>
-              Secure checkout, multiple payment methods, eligible refunds and
-              seller settlement after confirmed fulfilment—all shown as a
-              frontend demonstration.
+              Payment and protection terms will be published when the verified
+              payment, refund and fulfilment services are activated.
             </p>
             <div>
               <span>
@@ -430,18 +390,17 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
             <ShoppingCart />
             <b>Payment protected</b>
             <small>Order total</small>
-            <strong>$249.80</strong>
+            <strong>Provider pending</strong>
           </div>
         </article>
         <article className="protection-panel">
           <small>BUYER PROTECTION</small>
           <h2>Shop with confidence.</h2>
           {[
-            "Item not received",
-            "Item not as described",
-            "Damaged item",
-            "Refund eligibility",
-            "Dispute support",
+            "Order-linked support",
+            "Seller policy visibility",
+            "Secure account access",
+            "Trackable support references",
           ].map((x) => (
             <p key={x}>✓ {x}</p>
           ))}
@@ -449,19 +408,15 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
       </section>
       <section className="app-promo">
         <div>
-          <small>WEIVAS ON THE GO</small>
+          <small>MOBILE-READY MARKETPLACE</small>
           <h2>
-            One marketplace.
+            Shop and sell from
             <br />
-            Two powerful apps.
+            any modern browser.
           </h2>
           <p>
-            Shop confidently or manage your store wherever business takes you.
+            The responsive website supports buyers and sellers without claiming unreleased mobile apps.
           </p>
-          <div className="store-buttons">
-            <button> App Store</button>
-            <button>▶ Google Play</button>
-          </div>
         </div>
         <div className="app-phones">
           <div>
@@ -479,10 +434,10 @@ export function HomepageExperience({catalogProducts=[]}:{catalogProducts?:import
       </section>
       <section className="benefits">
         {[
-          [CreditCard, "Secure payments", "100% protected"],
-          [PackageCheck, "Easy returns", "30-day support"],
-          [Truck, "Fast delivery", "Worldwide shipping"],
-          [Headphones, "24/7 support", "Always here for you"],
+          [ShieldCheck, "Secure accounts", "Server-protected access"],
+          [PackageCheck, "Approved listings", "Active catalogue only"],
+          [Truck, "Delivery clarity", "Confirmed before payment"],
+          [Headphones, "Customer support", "Trackable requests"],
         ].map(([I, a, b]) => (
           <div key={String(a)}>
             {typeof I !== "string" && <I />}

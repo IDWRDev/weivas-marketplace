@@ -1,0 +1,3 @@
+"use server";import { revalidatePath } from "next/cache";import { z } from "zod";import { requireArea } from "@/server/auth/session";import { db } from "@/server/db/client";
+const updateSchema=z.object({id:z.string().min(1),status:z.enum(["open","in_progress","waiting_on_customer","resolved","closed"])});
+export async function updateSupportTicket(formData:FormData){await requireArea("admin");const parsed=updateSchema.parse(Object.fromEntries(formData));await db.supportTicket.update({where:{id:parsed.id},data:{status:parsed.status,resolvedAt:["resolved","closed"].includes(parsed.status)?new Date():null}});revalidatePath("/admin/support")}

@@ -13,11 +13,11 @@ import {
   X,
 } from "lucide-react";
 import { WeivasLogo } from "@/components/brand/WeivasLogo";
-import { categories } from "@/data/mock/marketplace";
+import type { Category } from "@/types/marketplace";
 import { useMarketplaceStore } from "@/stores/marketplace-store";
 import { useEffect, useState } from "react";
 type HeaderPrincipal={name?:string|null;role:"buyer"|"seller"|"admin";sellerApplicationStatus?:"draft"|"submitted"|"under_review"|"needs_information"|"approved"|"rejected"|"suspended"};
-export function MarketplaceHeader({principal}:{principal?:HeaderPrincipal}) {
+export function MarketplaceHeader({principal,categories=[]}:{principal?:HeaderPrincipal;categories?:Category[]}) {
   const [drawer, setDrawer] = useState(false);
   const [viewer,setViewer]=useState<HeaderPrincipal|undefined>(principal);
   const count = useMarketplaceStore((s) => Object.values(s.cart).reduce((total, quantity) => total + quantity, 0));
@@ -57,8 +57,8 @@ export function MarketplaceHeader({principal}:{principal?:HeaderPrincipal}) {
         </form>
         <div className="header-actions">
           <span>
-            🇳🇬 <small>Deliver to</small>
-            <b>Nigeria</b>
+            📍 <small>Delivery</small>
+            <b>Set at checkout</b>
           </span>
           <button className="locale">
             🌐 EN / USD <ChevronDown />
@@ -104,8 +104,7 @@ export function MarketplaceHeader({principal}:{principal?:HeaderPrincipal}) {
             {c.name}
           </Link>
         ))}
-        <Link href="/search?deal=true">Deals</Link>
-        <Link href="/search?verified=true">Verified Sellers</Link>
+        <Link href="/search">All products</Link>
         <Link className="sell-link" href="/sell">
           Sell on Weivas
         </Link>
